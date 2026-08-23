@@ -1,0 +1,21 @@
+{
+  "name": "software-time-machine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Software Time Machine - Causal debugging SaaS with Environment Bisect",
+  "scripts": {
+    "dev:web": "cd apps/web && npm run dev",
+    "dev:api": "cd apps/api && npx @nestjs/cli start --watch",
+    "build:web": "cd apps/web && npm run build",
+    "build:api": "cd apps/api && npm run build",
+    "install:all": "npm install && cd apps/web && npm install && cd ../api && npm install",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
