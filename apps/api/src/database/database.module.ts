@@ -8,6 +8,7 @@ import { Incident } from '../entities/incident.entity';
 import { StateManifest } from '../entities/state-manifest.entity';
 import { Hypothesis } from '../entities/hypothesis.entity';
 import { Experiment } from '../entities/experiment.entity';
+import { OrganizationMember } from '../entities/organization-member.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { Experiment } from '../entities/experiment.entity';
         username: configService.get('DATABASE_USERNAME', 'postgres'),
         password: configService.get('DATABASE_PASSWORD', 'postgres'),
         database: configService.get('DATABASE_NAME', 'software_time_machine'),
-        entities: [User, Organization, Project, Incident, StateManifest, Hypothesis, Experiment],
+        entities: [User, Organization, Project, Incident, StateManifest, Hypothesis, Experiment, OrganizationMember],
         synchronize: configService.get('NODE_ENV') !== 'production',
         logging: configService.get('NODE_ENV') === 'development',
       }),
@@ -34,6 +35,7 @@ import { Experiment } from '../entities/experiment.entity';
       StateManifest,
       Hypothesis,
       Experiment,
+      OrganizationMember,
     ]),
   ],
   exports: [TypeOrmModule],

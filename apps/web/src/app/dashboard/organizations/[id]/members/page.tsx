@@ -8,11 +8,13 @@ import api from '../../../../../lib/api';
 
 interface Member {
   id: string;
+  userId?: string;
   username: string;
   email: string;
   avatarUrl?: string;
   role: 'admin' | 'member' | 'viewer';
-  joinedAt: string;
+  status: 'pending' | 'active' | 'removed';
+  joinedAt?: string;
 }
 
 export default function OrganizationMembersPage() {
@@ -25,6 +27,7 @@ export default function OrganizationMembersPage() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<'admin' | 'member' | 'viewer'>('member');
   const [inviting, setInviting] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchOrganization();
@@ -44,8 +47,11 @@ export default function OrganizationMembersPage() {
 
   const fetchMembers = async () => {
     try {
-      // For now, we'll use mock data since the backend doesn't have a members endpoint yet
-      // In a real implementation, this would call the API
+      const response = await api.get(`/organizations/${params.id}/members`);
+      setMembers(response.data);
+    } catch (error) {
+      console.error('Failed to fetch members:', error);
+      // Fallback to mock data if API fails
       setMembers([
         {
           id: '1',
@@ -56,8 +62,6 @@ export default function OrganizationMembersPage() {
           joinedAt: new Date().toISOString(),
         },
       ]);
-    } catch (error) {
-      console.error('Failed to fetch members:', error);
     }
   };
 
@@ -66,30 +70,19 @@ export default function OrganizationMembersPage() {
     setInviting(true);
 
     try {
-      // This would call the actual invite endpoint
-      // await api.post(`/organizations/${params.id}/members`, {
-      //   email: inviteEmail,
-      //   role: inviteRole,
-      // });
+      const response = await api.post(`/organizations/${params.id}/members`, {
+        email: inviteEmail,
+        role: inviteRole,
+      });
       
-      // For now, just add a mock member
-      setMembers([
-        ...members,
-        {
-          id: Date.now().toString(),
-          username: inviteEmail.split('@')[0],
-          email: inviteEmail,
-          avatarUrl: '',
-          role: inviteRole,
-          joinedAt: new Date().toISOString(),
-        },
-      ]);
+      // Refresh members list
+      await fetchMembers();
       
       setShowInviteModal(false);
       setInviteEmail('');
       setInviteRole('member');
-    } catch (error) {
-      console.error('Failed to invite member:', error);
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Failed to invite member');
     } finally {
       setInviting(false);
     }
@@ -139,12 +132,21 @@ export default function OrganizationMembersPage() {
             <p className="mt-1 text-sm text-gray-500">Manage access and permissions for {organization.name}</p>
           </div>
           <button
-            onClick={() => setShowInviteModal(true)}
+            onClick={() => {
+              setShowInviteModal(true);
+              setError('');
+            }}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800"
           >
             Invite Member
           </button>
         </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            {error}
+          </div>
+        )}
 
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
@@ -178,17 +180,21 @@ export default function OrganizationMembersPage() {
                         value={member.role}
                         onChange={(e) => handleRoleChange(member.id, e.target.value as 'admin' | 'member' | 'viewer')}
                         className="text-sm border-gray-300 rounded-md shadow-sm focus:ring-gray-900 focus:border-gray-900"
+                        disabled={member.status !== 'active'}
                       >
                         <option value="admin">Admin</option>
                         <option value="member">Member</option>
                         <option value="viewer">Viewer</option>
                       </select>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        member.role === 'admin' ? 'bg-purple-100 text-purple-800' :
-                        member.role === 'member' ? 'bg-blue-100 text-blue-800' :
-                        'bg-gray-100 text-gray-800'
+                        member.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        member.status === 'active' ? (
+                          member.role === 'admin' ? 'bg-purple-100 text-purple-800' :
+                          member.role === 'member' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
+                        ) : 'bg-red-100 text-red-800'
                       }`}>
-                        {member.role}
+                        {member.status === 'pending' ? 'Pending' : member.role}
                       </span>
                     </div>
                   </div>

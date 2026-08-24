@@ -19,6 +19,7 @@ export default function NewProjectPage() {
   const [error, setError] = useState('');
   const [validating, setValidating] = useState(false);
   const [repoValid, setRepoValid] = useState<boolean | null>(null);
+  const [repoDetails, setRepoDetails] = useState<any>(null);
 
   useEffect(() => {
     fetchOrganizations();
@@ -60,6 +61,7 @@ export default function NewProjectPage() {
         setError(validation.error || 'Repository validation failed');
       } else {
         setError('');
+        setRepoDetails(validation.repository);
         // Auto-fill project name if empty
         if (!formData.name) {
           setFormData((prev) => ({ ...prev, name: validation.repository?.name || repo }));
@@ -109,6 +111,17 @@ export default function NewProjectPage() {
 
         <div className="bg-white shadow rounded-lg">
           <form onSubmit={handleSubmit} className="space-y-6 p-6">
+            {/* Help sidebar */}
+            <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
+              <h3 className="text-sm font-medium text-blue-900 mb-2">Setting up a new project</h3>
+              <ul className="text-xs text-blue-700 space-y-1">
+                <li>• Connect a GitHub repository to track environment changes</li>
+                <li>• We'll automatically detect PHP, Composer, and Docker configurations</li>
+                <li>• Specify your test command for failure detection</li>
+                <li>• Once connected, you can start debugging with Environment Bisect</li>
+              </ul>
+            </div>
+
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
                 {error}
@@ -157,7 +170,7 @@ export default function NewProjectPage() {
 
             <div>
               <label htmlFor="repositoryUrl" className="block text-sm font-medium text-gray-700">
-                GitHub Repository URL
+                GitHub Repository URL <span className="text-red-500">*</span>
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
                 <input
@@ -166,7 +179,11 @@ export default function NewProjectPage() {
                   id="repositoryUrl"
                   required
                   value={formData.repositoryUrl}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setRepoValid(null);
+                    setRepoDetails(null);
+                  }}
                   className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-l-md border border-gray-300 focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                   placeholder="https://github.com/owner/repo"
                 />
@@ -174,16 +191,63 @@ export default function NewProjectPage() {
                   type="button"
                   onClick={validateRepository}
                   disabled={validating || !formData.repositoryUrl}
-                  className="inline-flex items-center px-4 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                  className={`inline-flex items-center px-4 rounded-r-md border border-l-0 text-sm font-medium ${
+                    repoValid === true 
+                      ? 'bg-green-50 border-green-300 text-green-700' 
+                      : repoValid === false 
+                      ? 'bg-red-50 border-red-300 text-red-700'
+                      : 'bg-gray-50 border-gray-300 text-gray-700 hover:bg-gray-100'
+                  } disabled:opacity-50`}
                 >
-                  {validating ? 'Validating...' : 'Validate'}
+                  {validating ? (
+                    <span className="flex items-center">
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Validating...
+                    </span>
+                  ) : repoValid === true ? (
+                    <span className="flex items-center">
+                      <svg className="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Valid
+                    </span>
+                  ) : repoValid === false ? (
+                    <span className="flex items-center">
+                      <svg className="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                      Invalid
+                    </span>
+                  ) : (
+                    'Validate'
+                  )}
                 </button>
               </div>
-              {repoValid === true && (
-                <p className="mt-1 text-xs text-green-600">✓ Repository is accessible</p>
-              )}
-              {repoValid === false && (
-                <p className="mt-1 text-xs text-red-600">✗ Repository validation failed</p>
+              <p className="mt-1 text-xs text-gray-500">
+                Paste the full GitHub repository URL. We'll validate access and fetch repository details.
+              </p>
+              {repoDetails && (
+                <div className="mt-3 bg-gray-50 border border-gray-200 rounded-md p-3">
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0h8v12H6V4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900">{repoDetails.name}</p>
+                      <p className="text-xs text-gray-500">{repoDetails.description || 'No description'}</p>
+                      <div className="mt-2 flex items-center space-x-4 text-xs text-gray-500">
+                        <span>⭐ {repoDetails.stargazers_count || 0}</span>
+                        <span>🔀 {repoDetails.forks_count || 0}</span>
+                        <span>🌟 {repoDetails.language || 'Unknown'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
 
