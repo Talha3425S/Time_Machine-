@@ -149,7 +149,15 @@ export default function OrganizationDetailPage() {
 
         <div className="bg-white shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">Team Members</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">Team Members</h3>
+              <a
+                href={`/dashboard/organizations/${params.id}/members`}
+                className="text-sm text-gray-500 hover:text-gray-700"
+              >
+                Manage
+              </a>
+            </div>
             <div className="mt-4">
               <div className="flex items-center justify-between py-2">
                 <div className="flex items-center">
