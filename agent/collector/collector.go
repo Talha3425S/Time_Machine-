@@ -11,6 +11,5 @@ type EnvironmentState struct {
 
 // Collector interface defines the contract for all environment collectors
 type Collector interface {
-	Collect() interface{}
 	IsAvailable() bool
 }

@@ -18,6 +18,9 @@ export class Project {
   @Column({ nullable: true })
   defaultTestCommand: string;
 
+  @Column({ type: 'jsonb', nullable: true })
+  metadata: any;
+
   @CreateDateColumn()
   createdAt: Date;
 

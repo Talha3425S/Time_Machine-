@@ -1,0 +1,4 @@
+# Ignore sensitive data
+*.token
+*.secret
+cache/

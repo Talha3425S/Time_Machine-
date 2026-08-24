@@ -56,20 +56,25 @@ func checkAgentStatus() {
 	fmt.Println("✅ Configuration valid")
 
 	// Check collectors
-	collectors := map[string]collector.Collector{
-		"Git":       collector.NewGitCollector(),
-		"PHP":       collector.NewPHPCollector(),
-		"Composer":  collector.NewComposerCollector(),
-		"Docker":    collector.NewDockerCollector(),
-		"Environment": collector.NewEnvironmentCollector(),
+	type collectorCheck struct {
+		name     string
+		available bool
+	}
+
+	collectors := []collectorCheck{
+		{"Git", collector.NewGitCollector().IsAvailable()},
+		{"PHP", collector.NewPHPCollector().IsAvailable()},
+		{"Composer", collector.NewComposerCollector().IsAvailable()},
+		{"Docker", collector.NewDockerCollector().IsAvailable()},
+		{"Environment", collector.NewEnvironmentCollector().IsAvailable()},
 	}
 
 	fmt.Println("\nCollector Status:")
-	for name, col := range collectors {
-		if col.IsAvailable() {
-			fmt.Printf("✅ %s: Available\n", name)
+	for _, c := range collectors {
+		if c.available {
+			fmt.Printf("✅ %s: Available\n", c.name)
 		} else {
-			fmt.Printf("❌ %s: Not available\n", name)
+			fmt.Printf("❌ %s: Not available\n", c.name)
 		}
 	}
 

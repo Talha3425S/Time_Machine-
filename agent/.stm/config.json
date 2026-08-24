@@ -1,0 +1,24 @@
+{
+  "project_id": "",
+  "api_endpoint": "http://localhost:3001",
+  "collectors": {
+    "git": true,
+    "php": true,
+    "composer": true,
+    "docker": true,
+    "environment": true
+  },
+  "upload_frequency": "5m",
+  "filters": {
+    "exclude_paths": [
+      "vendor/",
+      "node_modules/",
+      ".git/"
+    ],
+    "exclude_env_vars": [
+      "password",
+      "secret",
+      "token"
+    ]
+  }
+}

@@ -3,7 +3,6 @@ package collector
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"os/exec"
 	"regexp"
 	"strings"

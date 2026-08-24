@@ -52,6 +52,12 @@ type ComposerLock struct {
 	PHP           string        `json:"php,omitempty"`
 }
 
+// AliasInfo represents package alias information
+type AliasInfo struct {
+	Name string `json:"name,omitempty"`
+	Ref  string `json:"ref,omitempty"`
+}
+
 // PackageInfo represents a package in composer.lock
 type PackageInfo struct {
 	Name     string   `json:"name,omitempty"`
@@ -94,8 +100,8 @@ type AutoloadConfig struct {
 
 // Repository represents composer repository
 type Repository struct {
-	Type string `json:"type,omitempty"`
-	URL  string `json:"url,omitempty"`
+	RepoType string `json:"type,omitempty"`
+	URL      string `json:"url,omitempty"`
 }
 
 // ComposerCollector collects Composer package manager information
@@ -209,12 +215,12 @@ func (c *ComposerCollector) getComposerJSON() *ComposerJSON {
 		return nil
 	}
 
-	var json ComposerJSON
-	if err := json.Unmarshal(data, &json); err != nil {
+	var composerData ComposerJSON
+	if err := json.Unmarshal(data, &composerData); err != nil {
 		return nil
 	}
 
-	return &json
+	return &composerData
 }
 
 func (c *ComposerCollector) getComposerLock() *ComposerLock {
@@ -363,14 +369,14 @@ func (c *ComposerCollector) getRepositoryURL() string {
 		return ""
 	}
 
-	json := c.getComposerJSON()
-	if json == nil {
+	composerData := c.getComposerJSON()
+	if composerData == nil {
 		return ""
 	}
 
 	// Check for repositories
-	for _, repo := range json.Repositories {
-		if repo.Type == "git" || repo.Type == "vcs" {
+	for _, repo := range composerData.Repositories {
+		if repo.RepoType == "git" || repo.RepoType == "vcs" {
 			return repo.URL
 		}
 	}

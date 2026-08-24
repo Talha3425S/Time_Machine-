@@ -7,6 +7,7 @@ import { RedisModule } from './redis/redis.module';
 import { AuthModule } from './auth/auth.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { GithubModule } from './github/github.module';
+import { AgentModule } from './agent/agent.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { GithubModule } from './github/github.module';
     AuthModule,
     OrganizationsModule,
     GithubModule,
+    AgentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -137,7 +137,7 @@ func (e *EnvironmentCollector) detectConfigFiles() []ConfigFile {
 	// Common configuration files to detect
 	configPatterns := []struct {
 		path string
-		type string
+		fileType string
 	}{
 		{".env", "dotenv"},
 		{".env.local", "dotenv"},
@@ -168,16 +168,9 @@ func (e *EnvironmentCollector) detectConfigFiles() []ConfigFile {
 		{"postgresql.conf", "postgresql"},
 	}
 
-	// Get current working directory
-	workDir, err := os.Getwd()
-	if err != nil {
-		return configFiles
-	}
-
 	// Check for config files in current directory
 	for _, pattern := range configPatterns {
 		filePath := pattern.path
-		configPath := filePath
 		
 		// Try current directory first
 		fullPath := filePath
@@ -185,7 +178,7 @@ func (e *EnvironmentCollector) detectConfigFiles() []ConfigFile {
 			info, _ := os.Stat(fullPath)
 			configFiles = append(configFiles, ConfigFile{
 				Path:     fullPath,
-				Type:     pattern.type,
+				Type:     pattern.fileType,
 				Exists:   true,
 				Size:     info.Size(),
 				Modified: info.ModTime().String(),
@@ -193,7 +186,7 @@ func (e *EnvironmentCollector) detectConfigFiles() []ConfigFile {
 		} else {
 			configFiles = append(configFiles, ConfigFile{
 				Path:   fullPath,
-				Type:   pattern.type,
+				Type:   pattern.fileType,
 				Exists: false,
 			})
 		}
