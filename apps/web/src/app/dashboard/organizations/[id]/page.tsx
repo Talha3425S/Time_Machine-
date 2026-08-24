@@ -175,9 +175,12 @@ export default function OrganizationDetailPage() {
               </div>
             </div>
             <div className="mt-4">
-              <button className="text-sm text-gray-500 hover:text-gray-700">
+              <a
+                href={`/dashboard/organizations/${params.id}/members`}
+                className="text-sm text-gray-500 hover:text-gray-700"
+              >
                 + Invite team member
-              </button>
+              </a>
             </div>
           </div>
         </div>
