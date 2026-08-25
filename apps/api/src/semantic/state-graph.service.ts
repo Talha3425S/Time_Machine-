@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { StateGraph } from '../entities/state-graph.entity';
 import { StateGraphNode } from '../entities/state-graph.entity';
 import { StateGraphEdge } from '../entities/state-graph.entity';
@@ -267,8 +267,8 @@ export class StateGraphService {
     const nodeIds = nodes.map(n => n.id);
     const edges = await this.stateGraphEdgeRepository.find({
       where: [
-        { sourceNodeId: nodeIds },
-        { targetNodeId: nodeIds },
+        { sourceNodeId: In(nodeIds) },
+        { targetNodeId: In(nodeIds) },
       ],
     });
 

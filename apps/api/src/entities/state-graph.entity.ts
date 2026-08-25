@@ -7,6 +7,12 @@ import { StateManifest } from './state-manifest.entity';
  * Used for tracking state evolution and causal relationships
  */
 @Entity('state_graphs')
+@Index(['projectId'])
+@Index(['sourceManifestId'])
+@Index(['targetManifestId'])
+@Index(['relationshipType'])
+@Index(['classification'])
+@Index(['createdAt'])
 export class StateGraph {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -68,14 +74,6 @@ export class StateGraph {
   @ManyToOne(() => StateManifest)
   @JoinColumn({ name: 'targetManifestId' })
   targetManifest: StateManifest;
-
-  // Indexes for graph traversal
-  @Index(['projectId'])
-  @Index(['sourceManifestId'])
-  @Index(['targetManifestId'])
-  @Index(['relationshipType'])
-  @Index(['classification'])
-  @Index(['createdAt'])
 }
 
 /**
@@ -83,6 +81,10 @@ export class StateGraph {
  * Used for graph algorithms and visualization
  */
 @Entity('state_graph_nodes')
+@Index(['projectId'])
+@Index(['manifestId'])
+@Index(['stateType'])
+@Index(['gitCommit'])
 export class StateGraphNode {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -127,12 +129,6 @@ export class StateGraphNode {
   @ManyToOne(() => Project)
   @JoinColumn({ name: 'projectId' })
   project: Project;
-
-  // Indexes
-  @Index(['projectId'])
-  @Index(['manifestId'])
-  @Index(['stateType'])
-  @Index(['gitCommit'])
 }
 
 /**
@@ -140,6 +136,11 @@ export class StateGraphNode {
  * Used for graph algorithms and visualization
  */
 @Entity('state_graph_edges')
+@Index(['sourceNodeId'])
+@Index(['targetNodeId'])
+@Index(['graphId'])
+@Index(['edgeType'])
+@Index(['riskLevel'])
 export class StateGraphEdge {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -185,11 +186,4 @@ export class StateGraphEdge {
   @ManyToOne(() => StateGraph)
   @JoinColumn({ name: 'graphId' })
   graph: StateGraph;
-
-  // Indexes
-  @Index(['sourceNodeId'])
-  @Index(['targetNodeId'])
-  @Index(['graphId'])
-  @Index(['edgeType'])
-  @Index(['riskLevel'])
 }
