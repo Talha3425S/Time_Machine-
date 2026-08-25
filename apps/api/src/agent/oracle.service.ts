@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { createHash } from 'crypto';
 import { Repository } from 'typeorm';
@@ -58,6 +58,14 @@ export class OracleService {
   }
 
   async incidentsForProject(projectId: string) { return this.incidents.find({ where: { projectId }, order: { updatedAt: 'DESC' } }); }
+
+  async updateIncident(projectId: string, incidentId: string, status: 'open' | 'investigating' | 'resolved') {
+    if (!['open', 'investigating', 'resolved'].includes(status)) throw new BadRequestException('Invalid incident status');
+    const incident = await this.incidents.findOne({ where: { id: incidentId, projectId } });
+    if (!incident) throw new NotFoundException('Incident not found');
+    incident.status = status;
+    return this.incidents.save(incident);
+  }
 
   private trimOutput(output?: string) { return (output ?? '').slice(-20_000); }
   private fingerprint(state?: Record<string, unknown>) { const git = state?.git as Record<string, unknown> | undefined; return { commit: git?.current_commit, branch: git?.current_branch }; }

@@ -24,6 +24,9 @@ var testCmd = &cobra.Command{
 func init() {
 	testCmd.Flags().StringVarP(&testCommand, "command", "c", "", "test command to execute")
 	testCmd.Flags().DurationVar(&testTimeout, "timeout", 10*time.Minute, "maximum test duration")
+	testCmd.Flags().StringVarP(&apiKey, "api-key", "k", "", "API key for authentication")
+	testCmd.Flags().StringVarP(&projectID, "project-id", "p", "", "Project ID")
+	testCmd.Flags().StringVarP(&apiEndpoint, "endpoint", "e", "http://localhost:3001", "API endpoint")
 }
 
 func runTestOracle() {

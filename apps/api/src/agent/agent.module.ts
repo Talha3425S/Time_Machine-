@@ -8,9 +8,10 @@ import { Incident } from '../entities/incident.entity';
 import { Baseline } from '../entities/baseline.entity';
 import { TestRun } from '../entities/test-run.entity';
 import { OracleService } from './oracle.service';
+import { SemanticModule } from '../semantic/semantic.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AgentState, Project, Incident, Baseline, TestRun])],
+  imports: [TypeOrmModule.forFeature([AgentState, Project, Incident, Baseline, TestRun]), SemanticModule],
   controllers: [AgentStateController, StatesController],
   providers: [AgentStateService, OracleService],
   exports: [AgentStateService],

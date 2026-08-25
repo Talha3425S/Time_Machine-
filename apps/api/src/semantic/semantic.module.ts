@@ -7,10 +7,13 @@ import { StateManifest } from '../entities/state-manifest.entity';
 import { StateGraph } from '../entities/state-graph.entity';
 import { StateGraphNode } from '../entities/state-graph.entity';
 import { StateGraphEdge } from '../entities/state-graph.entity';
+import { StateManifestService } from './state-manifest.service';
+import { SemanticController } from './semantic.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([StateManifest, StateGraph, StateGraphNode, StateGraphEdge])],
-  providers: [SemanticDiffService, LaravelAdapterService, StateGraphService],
-  exports: [SemanticDiffService, LaravelAdapterService, StateGraphService],
+  controllers: [SemanticController],
+  providers: [SemanticDiffService, LaravelAdapterService, StateGraphService, StateManifestService],
+  exports: [SemanticDiffService, LaravelAdapterService, StateGraphService, StateManifestService],
 })
 export class SemanticModule {}

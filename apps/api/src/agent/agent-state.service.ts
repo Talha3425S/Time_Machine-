@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AgentState } from '../entities/agent-state.entity';
 import { Project } from '../entities/project.entity';
+import { StateManifestService } from '../semantic/state-manifest.service';
 
 @Injectable()
 export class AgentStateService {
@@ -11,6 +12,7 @@ export class AgentStateService {
     private agentStateRepository: Repository<AgentState>,
     @InjectRepository(Project)
     private projectRepository: Repository<Project>,
+    private readonly stateManifestService: StateManifestService,
   ) {}
 
   async uploadState(projectId: string, stateData: any, metadata: any = {}) {
@@ -102,15 +104,15 @@ export class AgentStateService {
     }
 
     try {
-      // Processing logic for state analysis
-      // This would include:
-      // - State manifest generation
-      // - Semantic diffing with previous states
-      // - Anomaly detection
-      // - Hypothesis generation
+      const manifest = await this.stateManifestService.createFromAgentState(
+        state.projectId,
+        state.fullState || {},
+        { ...(state.metadata || {}), agentStateId: state.id },
+      );
 
       const processingResults = {
         manifestGenerated: true,
+        manifestId: manifest.id,
         anomaliesDetected: [],
         changesDetected: [],
         processingTime: new Date().toISOString(),

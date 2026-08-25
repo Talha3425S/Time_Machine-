@@ -29,6 +29,8 @@ export class StateGraphService {
     targetManifestId: string,
     relationshipType: 'direct' | 'derived' | 'causal' | 'temporal' = 'temporal',
   ): Promise<StateGraph> {
+    const existing = await this.stateGraphRepository.findOne({ where: { sourceManifestId, targetManifestId } });
+    if (existing) return existing;
     const sourceManifest = await this.stateManifestRepository.findOne({
       where: { id: sourceManifestId },
     });
@@ -89,6 +91,7 @@ export class StateGraphService {
       return [];
     }
 
+    await this.createGraphNodes(manifests);
     const graphEdges: StateGraph[] = [];
 
     // Create edges between consecutive manifests
@@ -101,14 +104,21 @@ export class StateGraphService {
       graphEdges.push(edge);
     }
 
-    // Create graph nodes
-    await this.createGraphNodes(manifests);
-
     // Create graph edges for visualization
     await this.createGraphEdges(graphEdges);
 
     return graphEdges;
   }
+
+  async addManifestToGraph(manifest: StateManifest, previousManifestId?: string): Promise<void> {
+    await this.createGraphNodes([manifest]);
+    if (previousManifestId) {
+      const graph = await this.createGraphEdge(previousManifestId, manifest.id);
+      await this.createGraphEdges([graph]);
+    }
+  }
+
+  async fingerprintManifest(manifest: StateManifest): Promise<string> { return this.semanticDiffService.generateFingerprint(manifest); }
 
   /**
    * Create graph nodes from manifests

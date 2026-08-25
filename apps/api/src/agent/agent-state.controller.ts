@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Query, UseGuards, Request, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request, Headers } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AgentStateService } from './agent-state.service';
 import { OracleService } from './oracle.service';
@@ -71,6 +71,11 @@ export class AgentStateController {
 
   @Get('incidents')
   async getIncidents(@Param('projectId') projectId: string) { return this.oracleService.incidentsForProject(projectId); }
+
+  @Put('incidents/:incidentId')
+  async updateIncident(@Param('projectId') projectId: string, @Param('incidentId') incidentId: string, @Body('status') status: 'open' | 'investigating' | 'resolved') {
+    return this.oracleService.updateIncident(projectId, incidentId, status);
+  }
 
   @Get('states')
   async getProjectStates(

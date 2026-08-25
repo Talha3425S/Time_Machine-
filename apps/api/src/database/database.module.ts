@@ -12,6 +12,7 @@ import { OrganizationMember } from '../entities/organization-member.entity';
 import { AgentState } from '../entities/agent-state.entity';
 import { Baseline } from '../entities/baseline.entity';
 import { TestRun } from '../entities/test-run.entity';
+import { StateGraph, StateGraphEdge, StateGraphNode } from '../entities/state-graph.entity';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { TestRun } from '../entities/test-run.entity';
         username: configService.get('DATABASE_USERNAME', 'postgres'),
         password: configService.get('DATABASE_PASSWORD', 'postgres'),
         database: configService.get('DATABASE_NAME', 'software_time_machine'),
-        entities: [User, Organization, Project, Incident, StateManifest, Hypothesis, Experiment, OrganizationMember, AgentState, Baseline, TestRun],
+        entities: [User, Organization, Project, Incident, StateManifest, Hypothesis, Experiment, OrganizationMember, AgentState, Baseline, TestRun, StateGraph, StateGraphNode, StateGraphEdge],
         synchronize: configService.get('NODE_ENV') !== 'production',
         logging: configService.get('NODE_ENV') === 'development',
       }),
@@ -42,6 +43,9 @@ import { TestRun } from '../entities/test-run.entity';
       AgentState,
       Baseline,
       TestRun,
+      StateGraph,
+      StateGraphNode,
+      StateGraphEdge,
     ]),
   ],
   exports: [TypeOrmModule],
