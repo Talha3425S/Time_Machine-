@@ -1,6 +1,10 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Request } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { OrganizationsService } from './organizations.service';
+
+interface RequestWithUser extends Request {
+  user?: { id: string };
+}
 
 @Controller('organizations')
 @UseGuards(AuthGuard('jwt'))
@@ -8,8 +12,9 @@ export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Post()
-  create(@Body() createOrganizationDto: { name: string; slug: string }) {
-    return this.organizationsService.create(createOrganizationDto);
+  create(@Body() createOrganizationDto: { name: string; slug: string }, @Request() req: RequestWithUser) {
+    const userId = req.user?.id;
+    return this.organizationsService.create(createOrganizationDto, userId);
   }
 
   @Get()

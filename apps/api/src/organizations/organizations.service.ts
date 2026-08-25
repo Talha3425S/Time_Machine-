@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Organization } from '../entities/organization.entity';
 import { Project } from '../entities/project.entity';
+import { OrganizationMember } from '../entities/organization-member.entity';
 
 @Injectable()
 export class OrganizationsService {
@@ -11,11 +12,35 @@ export class OrganizationsService {
     private organizationsRepository: Repository<Organization>,
     @InjectRepository(Project)
     private projectsRepository: Repository<Project>,
+    @InjectRepository(OrganizationMember)
+    private organizationMembersRepository: Repository<OrganizationMember>,
   ) {}
 
-  async create(createOrganizationDto: { name: string; slug: string }) {
+  async create(createOrganizationDto: { name: string; slug: string }, userId?: string) {
+    // Check if slug already exists
+    const existingOrg = await this.organizationsRepository.findOne({ 
+      where: { slug: createOrganizationDto.slug } 
+    });
+    if (existingOrg) {
+      throw new BadRequestException('Organization with this slug already exists');
+    }
+
     const organization = this.organizationsRepository.create(createOrganizationDto);
-    return this.organizationsRepository.save(organization);
+    const savedOrg = await this.organizationsRepository.save(organization);
+
+    // If userId is provided, add user as admin member
+    if (userId) {
+      const member = this.organizationMembersRepository.create({
+        organizationId: savedOrg.id,
+        userId: userId,
+        role: 'admin',
+        status: 'active',
+        joinedAt: new Date(),
+      });
+      await this.organizationMembersRepository.save(member);
+    }
+
+    return savedOrg;
   }
 
   async findAll() {
