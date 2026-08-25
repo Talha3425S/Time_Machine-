@@ -19,17 +19,44 @@ export class StateManifest {
   @Column()
   gitBranch: string;
 
-  @Column({ type: 'jsonb' })
+  // New structured fields matching manifest specification
+  @Column({ type: 'jsonb', nullable: true })
+  environment: Record<string, any>;
+
+  @Column({ type: 'jsonb', nullable: true })
+  codebase: Record<string, any>;
+
+  @Column({ type: 'jsonb', nullable: true })
+  infrastructure: Record<string, any>;
+
+  @Column({ type: 'jsonb', nullable: true })
+  configuration: Record<string, any>;
+
+  @Column({ type: 'jsonb', nullable: true })
+  dependencies: Record<string, any>;
+
+  @Column({ type: 'jsonb', nullable: true })
+  semantic: Record<string, any>;
+
+  // Legacy fields for backward compatibility
+  @Column({ type: 'jsonb', nullable: true })
   runtime: Record<string, any>;
 
   @Column({ type: 'jsonb', default: '[]' })
-  dependencies: Record<string, any>[];
+  dependenciesArray: Record<string, any>[];
 
-  @Column({ type: 'jsonb' })
+  @Column({ type: 'jsonb', nullable: true })
   config: Record<string, any>;
 
   @Column({ type: 'jsonb', nullable: true })
   docker: Record<string, any>;
+
+  // Metadata
+  @Column({ type: 'jsonb', nullable: true })
+  metadata: Record<string, any>;
+
+  @Column({ type: 'jsonb', nullable: true })
+  fingerprint: Record<string, any>;
 
   @CreateDateColumn()
   timestamp: Date;
