@@ -156,3 +156,21 @@ func (c *CloudClient) ReportError(errorMsg string, severity string) error {
 
 	return nil
 }
+
+// UploadOracleResult uploads a command result and its minimally required state
+// metadata. The API creates a baseline on success and an incident on failure.
+func (c *CloudClient) UploadOracleResult(result interface{}) error {
+	body, err := json.Marshal(result)
+	if err != nil { return fmt.Errorf("failed to marshal oracle result: %w", err) }
+	url := fmt.Sprintf("%s/api/projects/%s/oracle-results", c.apiEndpoint, c.projectID)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
+	if err != nil { return fmt.Errorf("failed to create request: %w", err) }
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.apiKey))
+	req.Header.Set("User-Agent", "STM-Agent/1.0")
+	resp, err := c.httpClient.Do(req)
+	if err != nil { return fmt.Errorf("failed to send request: %w", err) }
+	defer resp.Body.Close()
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices { body, _ := io.ReadAll(resp.Body); return fmt.Errorf("API returned error %d: %s", resp.StatusCode, string(body)) }
+	return nil
+}

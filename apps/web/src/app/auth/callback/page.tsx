@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { AuthResponse } from '../../types';
+import { AuthResponse } from '../../../types';
 
 export default function AuthCallbackPage() {
   const router = useRouter();

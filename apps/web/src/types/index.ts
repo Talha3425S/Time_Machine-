@@ -24,6 +24,18 @@ export interface Project {
   updatedAt: string;
 }
 
+export interface Incident {
+  id: string;
+  projectId: string;
+  title: string;
+  description?: string;
+  status: 'open' | 'investigating' | 'resolved';
+  failureType?: string;
+  metadata?: { command?: string; exitCode?: number; timedOut?: boolean };
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AuthResponse {
   access_token: string;
   user: User;

@@ -149,6 +149,16 @@ cd packages/planner-core && npm test
 npm run lint && npm run build
 ```
 
+### Failure capture and baselines
+
+Configure `project_id`, `api_key`, and an optional `test_command` in `.stm/config.json`, then run:
+
+```bash
+stm-agent test --command "php artisan test"
+```
+
+A successful command records the environment state as a baseline. A failed or timed-out command captures its redacted state metadata and output, classifies the failure, and creates (or deduplicates into) an open project incident.
+
 ## Core Concepts
 
 - **Environment Bisect**: Causal experimentation engine that detects changes and tests hypotheses

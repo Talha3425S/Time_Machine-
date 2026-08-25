@@ -41,7 +41,7 @@ export class AgentState {
   ipAddress: string;
 
   @Column({ default: 'manual' })
-  collectionTrigger: 'manual' | 'scheduled' | 'webhook' | 'ci';
+  collectionTrigger: 'manual' | 'scheduled' | 'webhook' | 'ci' | 'baseline' | 'failure';
 
   @Column({ type: 'jsonb', nullable: true })
   metadata: any;

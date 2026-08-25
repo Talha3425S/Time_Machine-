@@ -43,7 +43,9 @@ func initializeAgent() {
 
 	config := `{
   "project_id": "",
+  "api_key": "",
   "api_endpoint": "http://localhost:3001",
+  "test_command": "",
   "collectors": {
     "git": true,
     "php": true,

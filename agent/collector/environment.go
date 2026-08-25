@@ -5,15 +5,21 @@ import (
 	"strings"
 )
 
+var sensitivePatterns = []string{
+	"password", "secret", "token", "key", "api_key", "private_key",
+	"aws_secret", "google_key", "github_token", "database_url", "stripe_key",
+	"paypal_secret", "jwt_secret", "oauth_secret",
+}
+
 // EnvState represents the environment variables state
 type EnvState struct {
-	Variables      map[string]string `json:"variables,omitempty"`
-	SensitiveKeys  []string          `json:"sensitive_keys,omitempty"`
-	ConfigFiles    []ConfigFile      `json:"config_files,omitempty"`
-	SystemEnv      *SystemEnv        `json:"system_env,omitempty"`
-	UserEnv        *UserEnv          `json:"user_env,omitempty"`
-	Path           *PathEnv          `json:"path,omitempty"`
-	Shell          *ShellEnv         `json:"shell,omitempty"`
+	Variables     map[string]string `json:"variables,omitempty"`
+	SensitiveKeys []string          `json:"sensitive_keys,omitempty"`
+	ConfigFiles   []ConfigFile      `json:"config_files,omitempty"`
+	SystemEnv     *SystemEnv        `json:"system_env,omitempty"`
+	UserEnv       *UserEnv          `json:"user_env,omitempty"`
+	Path          *PathEnv          `json:"path,omitempty"`
+	Shell         *ShellEnv         `json:"shell,omitempty"`
 }
 
 // ConfigFile represents a configuration file detected in the environment
@@ -38,12 +44,12 @@ type SystemEnv struct {
 
 // UserEnv represents user-specific environment information
 type UserEnv struct {
-	Shell       string `json:"shell,omitempty"`
-	Term        string `json:"term,omitempty"`
-	Editor      string `json:"editor,omitempty"`
-	Language    string `json:"language,omitempty"`
-	Timezone    string `json:"timezone,omitempty"`
-	Locale      string `json:"locale,omitempty"`
+	Shell    string `json:"shell,omitempty"`
+	Term     string `json:"term,omitempty"`
+	Editor   string `json:"editor,omitempty"`
+	Language string `json:"language,omitempty"`
+	Timezone string `json:"timezone,omitempty"`
+	Locale   string `json:"locale,omitempty"`
 }
 
 // PathEnv represents PATH environment variable information
@@ -91,13 +97,16 @@ func (e *EnvironmentCollector) IsAvailable() bool {
 
 func (e *EnvironmentCollector) getEnvironmentVariables() map[string]string {
 	env := make(map[string]string)
-	
+
 	// Collect all environment variables
 	for _, envVar := range os.Environ() {
 		parts := strings.SplitN(envVar, "=", 2)
 		if len(parts) == 2 {
 			key := parts[0]
 			value := parts[1]
+			if isSensitiveKey(key) {
+				value = "[REDACTED]"
+			}
 			env[key] = value
 		}
 	}
@@ -106,24 +115,14 @@ func (e *EnvironmentCollector) getEnvironmentVariables() map[string]string {
 }
 
 func (e *EnvironmentCollector) detectSensitiveKeys() []string {
-	sensitivePatterns := []string{
-		"password", "secret", "token", "key", "api_key", "private_key",
-		"aws_secret", "google_key", "github_token", "database_url",
-		"stripe_key", "paypal_secret", "jwt_secret", "oauth_secret",
-	}
-
 	sensitiveKeys := []string{}
 	envVars := os.Environ()
 
 	for _, envVar := range envVars {
 		parts := strings.SplitN(envVar, "=", 2)
 		if len(parts) == 2 {
-			key := strings.ToLower(parts[0])
-			for _, pattern := range sensitivePatterns {
-				if strings.Contains(key, pattern) {
-					sensitiveKeys = append(sensitiveKeys, parts[0])
-					break
-				}
+			if isSensitiveKey(parts[0]) {
+				sensitiveKeys = append(sensitiveKeys, parts[0])
 			}
 		}
 	}
@@ -131,12 +130,22 @@ func (e *EnvironmentCollector) detectSensitiveKeys() []string {
 	return sensitiveKeys
 }
 
+func isSensitiveKey(key string) bool {
+	lowerKey := strings.ToLower(key)
+	for _, pattern := range sensitivePatterns {
+		if strings.Contains(lowerKey, pattern) {
+			return true
+		}
+	}
+	return false
+}
+
 func (e *EnvironmentCollector) detectConfigFiles() []ConfigFile {
 	configFiles := []ConfigFile{}
 
 	// Common configuration files to detect
 	configPatterns := []struct {
-		path string
+		path     string
 		fileType string
 	}{
 		{".env", "dotenv"},
@@ -171,7 +180,7 @@ func (e *EnvironmentCollector) detectConfigFiles() []ConfigFile {
 	// Check for config files in current directory
 	for _, pattern := range configPatterns {
 		filePath := pattern.path
-		
+
 		// Try current directory first
 		fullPath := filePath
 		if _, err := os.Stat(fullPath); err == nil {

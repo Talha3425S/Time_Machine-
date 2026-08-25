@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 
 	"github.com/software-time-machine/agent/client"
-	"github.com/software-time-machine/agent/collector"
 	"github.com/spf13/cobra"
 )
 
@@ -71,19 +70,7 @@ func uploadStateToCloud() {
 		fmt.Println("Collecting environment state...")
 	}
 
-	gitCollector := collector.NewGitCollector()
-	phpCollector := collector.NewPHPCollector()
-	composerCollector := collector.NewComposerCollector()
-	dockerCollector := collector.NewDockerCollector()
-	envCollector := collector.NewEnvironmentCollector()
-
-	state := &collector.EnvironmentState{
-		Git:      gitCollector.Collect(),
-		PHP:      phpCollector.Collect(),
-		Composer: composerCollector.Collect(),
-		Docker:   dockerCollector.Collect(),
-		Env:      envCollector.Collect(),
-	}
+	state := collectState()
 
 	// Create cloud client
 	cloudClient := client.NewCloudClient(apiEndpoint, apiKey, projectID)

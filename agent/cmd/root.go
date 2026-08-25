@@ -25,6 +25,7 @@ func init() {
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(statusCmd)
 	rootCmd.AddCommand(uploadCmd)
+	rootCmd.AddCommand(testCmd)
 }
 
 var verbose bool

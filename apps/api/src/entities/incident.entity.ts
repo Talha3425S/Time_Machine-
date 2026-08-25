@@ -25,6 +25,12 @@ export class Incident {
   @Column({ nullable: true })
   failureType: string;
 
+  @Column({ nullable: true })
+  failureSignature: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  metadata: Record<string, unknown>;
+
   @CreateDateColumn()
   createdAt: Date;
 

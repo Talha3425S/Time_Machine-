@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Delete, Body, Param, Query, UseGuards, Request, Headers } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AgentStateService } from './agent-state.service';
+import { OracleService } from './oracle.service';
+import type { OraclePayload } from './oracle.service';
 
 interface RequestWithUser extends Request {
   user: {
@@ -14,7 +16,7 @@ interface RequestWithUser extends Request {
 @Controller('api/projects/:projectId')
 @UseGuards(JwtAuthGuard)
 export class AgentStateController {
-  constructor(private readonly agentStateService: AgentStateService) {}
+  constructor(private readonly agentStateService: AgentStateService, private readonly oracleService: OracleService) {}
 
   @Post('state')
   async uploadState(
@@ -61,6 +63,14 @@ export class AgentStateController {
   ) {
     return this.agentStateService.reportError(projectId, errorData);
   }
+
+  @Post('oracle-results')
+  async recordOracleResult(@Param('projectId') projectId: string, @Body() payload: OraclePayload) {
+    return this.oracleService.record(projectId, payload);
+  }
+
+  @Get('incidents')
+  async getIncidents(@Param('projectId') projectId: string) { return this.oracleService.incidentsForProject(projectId); }
 
   @Get('states')
   async getProjectStates(

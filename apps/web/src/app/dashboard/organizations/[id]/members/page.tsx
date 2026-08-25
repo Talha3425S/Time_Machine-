@@ -59,6 +59,7 @@ export default function OrganizationMembersPage() {
           email: 'your.email@example.com',
           avatarUrl: '',
           role: 'admin',
+          status: 'active',
           joinedAt: new Date().toISOString(),
         },
       ]);

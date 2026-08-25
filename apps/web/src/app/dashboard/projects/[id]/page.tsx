@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import DashboardLayout from '../../../../components/DashboardLayout';
-import { Project } from '../../../../types';
+import { Incident, Project } from '../../../../types';
 import api from '../../../../lib/api';
 
 export default function ProjectDetailPage() {
   const router = useRouter();
   const params = useParams();
   const [project, setProject] = useState<Project | null>(null);
+  const [incidents, setIncidents] = useState<Incident[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,6 +21,8 @@ export default function ProjectDetailPage() {
     try {
       const response = await api.get(`/organizations/projects/${params.id}`);
       setProject(response.data);
+      const incidentResponse = await api.get(`/api/projects/${params.id}/incidents`);
+      setIncidents(incidentResponse.data);
     } catch (error) {
       console.error('Failed to fetch project:', error);
     } finally {
@@ -73,7 +76,7 @@ export default function ProjectDetailPage() {
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <dt className="text-sm font-medium text-gray-500 truncate">Incidents</dt>
-              <dd className="mt-1 text-3xl font-semibold text-gray-900">0</dd>
+              <dd className="mt-1 text-3xl font-semibold text-gray-900">{incidents.filter((incident) => incident.status !== 'resolved').length}</dd>
             </div>
           </div>
           <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -81,6 +84,25 @@ export default function ProjectDetailPage() {
               <dt className="text-sm font-medium text-gray-500 truncate">Experiments</dt>
               <dd className="mt-1 text-3xl font-semibold text-gray-900">0</dd>
             </div>
+          </div>
+        </div>
+
+        <div className="bg-white shadow rounded-lg">
+          <div className="px-4 py-5 sm:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg leading-6 font-medium text-gray-900">Recent incidents</h3>
+                <p className="mt-1 text-sm text-gray-500">Failures captured by the local test oracle.</p>
+              </div>
+              <a href={`/dashboard/projects/${project.id}/incidents`} className="text-sm font-medium text-blue-600 hover:text-blue-500">View all</a>
+            </div>
+            {incidents.length === 0 ? (
+              <p className="mt-5 text-sm text-gray-500">No failures captured yet. Run <code className="rounded bg-gray-100 px-1">stm-agent test --command &quot;…&quot;</code> to create a baseline or incident.</p>
+            ) : (
+              <ul className="mt-5 divide-y divide-gray-200">
+                {incidents.slice(0, 3).map((incident) => <li key={incident.id} className="py-3 flex justify-between gap-4"><div><p className="text-sm font-medium text-gray-900">{incident.title}</p><p className="mt-1 text-sm text-gray-500">{incident.failureType || 'test failure'} · {new Date(incident.createdAt).toLocaleString()}</p></div><span className="h-fit rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700">{incident.status}</span></li>)}
+              </ul>
+            )}
           </div>
         </div>
 

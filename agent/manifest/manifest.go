@@ -10,42 +10,42 @@ import (
 
 // Manifest represents the complete state manifest
 type Manifest struct {
-	Manifest     CoreManifest    `json:"manifest"`
-	Environment  Environment    `json:"environment"`
-	Codebase     Codebase       `json:"codebase"`
+	Manifest       CoreManifest   `json:"manifest"`
+	Environment    Environment    `json:"environment"`
+	Codebase       Codebase       `json:"codebase"`
 	Infrastructure Infrastructure `json:"infrastructure"`
-	Runtime      Runtime        `json:"runtime"`
-	Semantic     Semantic       `json:"semantic"`
+	Runtime        Runtime        `json:"runtime"`
+	Semantic       Semantic       `json:"semantic"`
 }
 
 // CoreManifest contains manifest metadata
 type CoreManifest struct {
-	Version    string    `json:"version"`
-	ID         string    `json:"id"`
-	ProjectID  string    `json:"projectId"`
-	Timestamp  time.Time `json:"timestamp"`
-	Metadata   Metadata  `json:"metadata"`
+	Version   string    `json:"version"`
+	ID        string    `json:"id"`
+	ProjectID string    `json:"projectId"`
+	Timestamp time.Time `json:"timestamp"`
+	Metadata  Metadata  `json:"metadata"`
 }
 
 // Metadata contains collection metadata
 type Metadata struct {
-	Source            string `json:"source"`
-	AgentVersion      string `json:"agentVersion"`
-	Hostname          string `json:"hostname"`
-	Platform          string `json:"platform"`
+	Source             string `json:"source"`
+	AgentVersion       string `json:"agentVersion"`
+	Hostname           string `json:"hostname"`
+	Platform           string `json:"platform"`
 	CollectionDuration int64  `json:"collectionDuration"`
 }
 
 // Environment represents system environment
 type Environment struct {
-	System       SystemInfo       `json:"system"`
-	Dependencies Dependencies    `json:"dependencies"`
+	System       SystemInfo   `json:"system"`
+	Dependencies Dependencies `json:"dependencies"`
 }
 
 // SystemInfo contains OS and runtime information
 type SystemInfo struct {
-	OS        OSInfo        `json:"os"`
-	Runtime   RuntimeInfo   `json:"runtime"`
+	OS        OSInfo            `json:"os"`
+	Runtime   RuntimeInfo       `json:"runtime"`
 	Variables map[string]string `json:"variables"`
 }
 
@@ -78,24 +78,24 @@ type PackageManager struct {
 
 // Package represents a single package
 type Package struct {
-	Name   string `json:"name"`
+	Name    string `json:"name"`
 	Version string `json:"version"`
-	Type   string `json:"type"`
-	Source string `json:"source"`
+	Type    string `json:"type"`
+	Source  string `json:"source"`
 }
 
 // Codebase represents source code state
 type Codebase struct {
-	Git          GitInfo         `json:"git"`
+	Git           GitInfo      `json:"git"`
 	Configuration []ConfigFile `json:"configuration"`
 }
 
 // GitInfo contains git repository state
 type GitInfo struct {
-	Repository string       `json:"repository"`
-	Branch     string       `json:"branch"`
-	Commit     CommitInfo   `json:"commit"`
-	Status     GitStatus    `json:"status"`
+	Repository string     `json:"repository"`
+	Branch     string     `json:"branch"`
+	Commit     CommitInfo `json:"commit"`
+	Status     GitStatus  `json:"status"`
 }
 
 // CommitInfo contains git commit details
@@ -129,9 +129,9 @@ type Infrastructure struct {
 
 // DockerInfo contains Docker daemon and container information
 type DockerInfo struct {
-	Daemon     DockerDaemon    `json:"daemon"`
+	Daemon     DockerDaemon      `json:"daemon"`
 	Containers []DockerContainer `json:"containers"`
-	Images     []DockerImage   `json:"images"`
+	Images     []DockerImage     `json:"images"`
 }
 
 // DockerDaemon contains Docker daemon information
@@ -169,14 +169,14 @@ type Service struct {
 
 // Runtime represents application runtime state
 type Runtime struct {
-	Application Application   `json:"application"`
-	Extensions  []Extension  `json:"extensions"`
+	Application Application `json:"application"`
+	Extensions  []Extension `json:"extensions"`
 }
 
 // Application contains application framework information
 type Application struct {
-	Framework     Framework     `json:"framework"`
-	Configuration AppConfig    `json:"configuration"`
+	Framework     Framework `json:"framework"`
+	Configuration AppConfig `json:"configuration"`
 }
 
 // Framework represents the application framework
@@ -200,22 +200,22 @@ type Cache struct {
 
 // Extension represents a runtime extension
 type Extension struct {
-	Name         string                 `json:"name"`
-	Version      string                 `json:"version"`
-	Enabled      bool                   `json:"enabled"`
+	Name          string                 `json:"name"`
+	Version       string                 `json:"version"`
+	Enabled       bool                   `json:"enabled"`
 	Configuration map[string]interface{} `json:"configuration"`
 }
 
 // Semantic contains semantic analysis results
 type Semantic struct {
 	Normalized  NormalizedState `json:"normalized"`
-	Fingerprint Fingerprint    `json:"fingerprint"`
+	Fingerprint Fingerprint     `json:"fingerprint"`
 }
 
 // NormalizedState contains framework-specific normalized state
 type NormalizedState struct {
-	Framework    string            `json:"framework"`
-	Dependencies NormalizedDeps   `json:"dependencies"`
+	Framework     string            `json:"framework"`
+	Dependencies  NormalizedDeps    `json:"dependencies"`
 	Configuration map[string]string `json:"configuration"`
 }
 
@@ -228,15 +228,15 @@ type NormalizedDeps struct {
 
 // Fingerprint contains hash-based fingerprints
 type Fingerprint struct {
-	Environment string `json:"environment"`
-	Dependencies string `json:"dependencies"`
+	Environment   string `json:"environment"`
+	Dependencies  string `json:"dependencies"`
 	Configuration string `json:"configuration"`
-	Combined    string `json:"combined"`
+	Combined      string `json:"combined"`
 }
 
 // Builder builds state manifests
 type Builder struct {
-	manifest *Manifest
+	manifest  *Manifest
 	startTime time.Time
 }
 
@@ -300,13 +300,16 @@ func (b *Builder) WithSemantic(semantic Semantic) *Builder {
 // Finalize completes the manifest building process
 func (b *Builder) Finalize() *Manifest {
 	duration := time.Since(b.startTime).Milliseconds()
+	if duration == 0 {
+		duration = 1
+	}
 	b.manifest.Manifest.Metadata.CollectionDuration = duration
-	
+
 	// Generate fingerprints if not set
 	if b.manifest.Semantic.Fingerprint.Combined == "" {
 		b.manifest.Semantic.Fingerprint = b.generateFingerprints()
 	}
-	
+
 	return b.manifest
 }
 
@@ -315,21 +318,21 @@ func (b *Builder) generateFingerprints() Fingerprint {
 	envHash := b.hashEnvironment()
 	depHash := b.hashDependencies()
 	configHash := b.hashConfiguration()
-	
+
 	combined := envHash + depHash + configHash
 	combinedHash := sha256.Sum256([]byte(combined))
-	
+
 	return Fingerprint{
-		Environment:  envHash,
-		Dependencies: depHash,
+		Environment:   envHash,
+		Dependencies:  depHash,
 		Configuration: configHash,
-		Combined:    hex.EncodeToString(combinedHash[:]),
+		Combined:      hex.EncodeToString(combinedHash[:]),
 	}
 }
 
 // hashEnvironment creates environment fingerprint
 func (b *Builder) hashEnvironment() string {
-	data := fmt.Sprintf("%s-%s-%s", 
+	data := fmt.Sprintf("%s-%s-%s",
 		b.manifest.Environment.System.OS.Name,
 		b.manifest.Environment.System.OS.Version,
 		b.manifest.Environment.System.Runtime.Version,

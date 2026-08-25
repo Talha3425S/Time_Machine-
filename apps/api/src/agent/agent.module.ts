@@ -4,11 +4,15 @@ import { AgentStateService } from './agent-state.service';
 import { AgentStateController, StatesController } from './agent-state.controller';
 import { AgentState } from '../entities/agent-state.entity';
 import { Project } from '../entities/project.entity';
+import { Incident } from '../entities/incident.entity';
+import { Baseline } from '../entities/baseline.entity';
+import { TestRun } from '../entities/test-run.entity';
+import { OracleService } from './oracle.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AgentState, Project])],
+  imports: [TypeOrmModule.forFeature([AgentState, Project, Incident, Baseline, TestRun])],
   controllers: [AgentStateController, StatesController],
-  providers: [AgentStateService],
+  providers: [AgentStateService, OracleService],
   exports: [AgentStateService],
 })
 export class AgentModule {}
