@@ -159,6 +159,10 @@ stm-agent test --command "php artisan test"
 
 A successful command records the environment state as a baseline. A failed or timed-out command captures its redacted state metadata and output, classifies the failure, and creates (or deduplicates into) an open project incident.
 
+### Sandbox experiments
+
+Install and sign in to the Docker Sandboxes CLI (`sbx`), then set `SANDBOX_WORKSPACE_ROOT` to the directory containing local Git repositories. Sandbox experiments run in clone mode with network access denied by default. Launch and monitor them from `/dashboard/projects/<project-id>/experiments`.
+
 ## Core Concepts
 
 - **Environment Bisect**: Causal experimentation engine that detects changes and tests hypotheses

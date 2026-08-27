@@ -13,6 +13,7 @@ import { AgentState } from '../entities/agent-state.entity';
 import { Baseline } from '../entities/baseline.entity';
 import { TestRun } from '../entities/test-run.entity';
 import { StateGraph, StateGraphEdge, StateGraphNode } from '../entities/state-graph.entity';
+import { SandboxExecution } from '../entities/sandbox-execution.entity';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { StateGraph, StateGraphEdge, StateGraphNode } from '../entities/state-gr
         username: configService.get('DATABASE_USERNAME', 'postgres'),
         password: configService.get('DATABASE_PASSWORD', 'postgres'),
         database: configService.get('DATABASE_NAME', 'software_time_machine'),
-        entities: [User, Organization, Project, Incident, StateManifest, Hypothesis, Experiment, OrganizationMember, AgentState, Baseline, TestRun, StateGraph, StateGraphNode, StateGraphEdge],
+        entities: [User, Organization, Project, Incident, StateManifest, Hypothesis, Experiment, OrganizationMember, AgentState, Baseline, TestRun, StateGraph, StateGraphNode, StateGraphEdge, SandboxExecution],
         synchronize: configService.get('NODE_ENV') !== 'production',
         logging: configService.get('NODE_ENV') === 'development',
       }),
@@ -46,6 +47,7 @@ import { StateGraph, StateGraphEdge, StateGraphNode } from '../entities/state-gr
       StateGraph,
       StateGraphNode,
       StateGraphEdge,
+      SandboxExecution,
     ]),
   ],
   exports: [TypeOrmModule],
