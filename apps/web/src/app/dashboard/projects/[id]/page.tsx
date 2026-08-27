@@ -64,6 +64,7 @@ export default function ProjectDetailPage() {
           >
             Settings
           </a>
+          <a href={`/dashboard/projects/${project.id}/experiments`} className="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800">Experiments</a>
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
