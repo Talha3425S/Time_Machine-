@@ -23,7 +23,8 @@ export default function NewOrganizationPage() {
       const response = await api.post('/organizations', formData);
       router.push(`/dashboard/organizations/${response.data.id}`);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to create organization');
+      const message = err.response?.data?.message;
+      setError(Array.isArray(message) ? message.join(', ') : message || (err.request ? 'Cannot reach the API. Confirm that http://localhost:3001 is running.' : 'Failed to create organization'));
     } finally {
       setLoading(false);
     }
@@ -35,7 +36,7 @@ export default function NewOrganizationPage() {
       ...prev,
       [name]: value,
       // Auto-generate slug from name
-      slug: name === 'name' ? value.toLowerCase().replace(/\s+/g, '-') : prev.slug,
+      slug: name === 'name' ? value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') : prev.slug,
     }));
   };
 

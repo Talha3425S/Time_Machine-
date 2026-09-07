@@ -13,8 +13,8 @@ export class TestRun {
   @Column({ type: 'text', nullable: true }) output: string;
   @Column({ default: 0 }) durationMs: number;
   @Column({ default: false }) timedOut: boolean;
-  @Column({ nullable: true }) stateId: string | null;
-  @Column({ nullable: true }) incidentId: string | null;
+  @Column({ type: 'varchar', nullable: true }) stateId: string | null;
+  @Column({ type: 'varchar', nullable: true }) incidentId: string | null;
   @CreateDateColumn() createdAt: Date;
   @ManyToOne(() => Project) @JoinColumn({ name: 'projectId' }) project: Project;
   @ManyToOne(() => AgentState, { nullable: true }) @JoinColumn({ name: 'stateId' }) state: AgentState;

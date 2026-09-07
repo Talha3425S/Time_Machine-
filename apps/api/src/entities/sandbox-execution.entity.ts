@@ -7,8 +7,8 @@ export class SandboxExecution {
   @Column() sandboxName: string;
   @Column() workspacePath: string;
   @Column() command: string;
-  @Column({ nullable: true }) candidateBranch: string | null;
-  @Column({ nullable: true }) baselineRef: string | null;
+  @Column({ type: 'varchar', nullable: true }) candidateBranch: string | null;
+  @Column({ type: 'varchar', nullable: true }) baselineRef: string | null;
   @Column({ type: 'enum', enum: ['creating', 'ready', 'running', 'restoring', 'completed', 'failed', 'cleaned'], default: 'creating' })
   status: 'creating' | 'ready' | 'running' | 'restoring' | 'completed' | 'failed' | 'cleaned';
   @Column({ default: false }) passed: boolean;

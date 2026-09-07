@@ -7,7 +7,7 @@ export class Baseline {
   @PrimaryGeneratedColumn('uuid') id: string;
   @Column() projectId: string;
   @Column() command: string;
-  @Column({ nullable: true }) stateId: string | null;
+  @Column({ type: 'varchar', nullable: true }) stateId: string | null;
   @Column({ type: 'jsonb' }) result: Record<string, unknown>;
   @Column({ type: 'jsonb', nullable: true }) fingerprint: Record<string, unknown>;
   @CreateDateColumn() createdAt: Date;

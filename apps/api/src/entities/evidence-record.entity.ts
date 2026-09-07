@@ -11,7 +11,7 @@ export class EvidenceRecord {
   @Column()
   incidentId: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   experimentId: string | null;
 
   @Column()
