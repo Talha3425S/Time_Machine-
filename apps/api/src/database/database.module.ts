@@ -14,6 +14,8 @@ import { Baseline } from '../entities/baseline.entity';
 import { TestRun } from '../entities/test-run.entity';
 import { StateGraph, StateGraphEdge, StateGraphNode } from '../entities/state-graph.entity';
 import { SandboxExecution } from '../entities/sandbox-execution.entity';
+import { EvidenceRecord } from '../entities/evidence-record.entity';
+import { ProofReport } from '../entities/proof-report.entity';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { SandboxExecution } from '../entities/sandbox-execution.entity';
         username: configService.get('DATABASE_USERNAME', 'postgres'),
         password: configService.get('DATABASE_PASSWORD', 'postgres'),
         database: configService.get('DATABASE_NAME', 'software_time_machine'),
-        entities: [User, Organization, Project, Incident, StateManifest, Hypothesis, Experiment, OrganizationMember, AgentState, Baseline, TestRun, StateGraph, StateGraphNode, StateGraphEdge, SandboxExecution],
+        entities: [User, Organization, Project, Incident, StateManifest, Hypothesis, Experiment, OrganizationMember, AgentState, Baseline, TestRun, StateGraph, StateGraphNode, StateGraphEdge, SandboxExecution, EvidenceRecord, ProofReport],
         synchronize: configService.get('NODE_ENV') !== 'production',
         logging: configService.get('NODE_ENV') === 'development',
       }),
@@ -48,6 +50,8 @@ import { SandboxExecution } from '../entities/sandbox-execution.entity';
       StateGraphNode,
       StateGraphEdge,
       SandboxExecution,
+      EvidenceRecord,
+      ProofReport,
     ]),
   ],
   exports: [TypeOrmModule],

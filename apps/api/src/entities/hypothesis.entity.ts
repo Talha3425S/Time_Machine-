@@ -25,6 +25,15 @@ export class Hypothesis {
   @Column({ type: 'jsonb', default: '[]' })
   suspectedChanges: string[];
 
+  @Column({ default: 0 })
+  rank: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  estimatedCost: number;
+
+  @Column({ type: 'jsonb', nullable: true })
+  evidence: Record<string, unknown>;
+
   @CreateDateColumn()
   createdAt: Date;
 

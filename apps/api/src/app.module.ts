@@ -10,6 +10,8 @@ import { GithubModule } from './github/github.module';
 import { AgentModule } from './agent/agent.module';
 import { SemanticModule } from './semantic/semantic.module';
 import { ExperimentsModule } from './experiments/experiments.module';
+import { PlanningModule } from './planning/planning.module';
+import { EvidenceModule } from './evidence/evidence.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { ExperimentsModule } from './experiments/experiments.module';
     AgentModule,
     SemanticModule,
     ExperimentsModule,
+    PlanningModule,
+    EvidenceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
