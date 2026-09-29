@@ -7,6 +7,7 @@ export class SandboxExecution {
   @Column() sandboxName: string;
   @Column() workspacePath: string;
   @Column() command: string;
+  @Column({ type: 'varchar', nullable: true }) plannedExperimentId: string | null;
   @Column({ type: 'varchar', nullable: true }) candidateBranch: string | null;
   @Column({ type: 'varchar', nullable: true }) baselineRef: string | null;
   @Column({ type: 'enum', enum: ['creating', 'ready', 'running', 'restoring', 'completed', 'failed', 'cleaned'], default: 'creating' })
