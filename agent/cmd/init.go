@@ -46,6 +46,7 @@ func initializeAgent() {
   "api_key": "",
   "api_endpoint": "http://localhost:3001",
   "test_command": "",
+  "incident_id": "",
   "collectors": {
     "git": true,
     "php": true,

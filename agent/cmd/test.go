@@ -13,6 +13,7 @@ import (
 
 var testCommand string
 var testTimeout time.Duration
+var trialIncidentID string
 var secretAssignment = regexp.MustCompile(`(?i)\b(password|secret|token|api[_-]?key|private[_-]?key)\b\s*[:=]\s*[^\s]+`)
 
 var testCmd = &cobra.Command{
@@ -26,6 +27,7 @@ func init() {
 	testCmd.Flags().DurationVar(&testTimeout, "timeout", 10*time.Minute, "maximum test duration")
 	testCmd.Flags().StringVarP(&apiKey, "api-key", "k", "", "API key for authentication")
 	testCmd.Flags().StringVarP(&projectID, "project-id", "p", "", "Project ID")
+	testCmd.Flags().StringVar(&trialIncidentID, "incident-id", "", "Existing incident ID to record this run as a retry trial")
 	testCmd.Flags().StringVarP(&apiEndpoint, "endpoint", "e", "http://localhost:3001", "API endpoint")
 }
 
@@ -44,6 +46,9 @@ func runTestOracle() {
 	if projectID == "" {
 		projectID, _ = config["project_id"].(string)
 	}
+	if trialIncidentID == "" {
+		trialIncidentID, _ = config["incident_id"].(string)
+	}
 	if endpoint, ok := config["api_endpoint"].(string); ok && apiEndpoint == "http://localhost:3001" {
 		apiEndpoint = endpoint
 	}
@@ -58,9 +63,14 @@ func runTestOracle() {
 		"output": redactOutput(result.Output), "durationMs": result.Duration.Milliseconds(), "timedOut": result.TimedOut,
 		"executedAt": result.ExecutedAt, "state": state,
 	}
+	if trialIncidentID != "" {
+		payload["incidentId"] = trialIncidentID
+	}
 	cloud := client.NewCloudClient(apiEndpoint, apiKey, projectID)
 	checkError(cloud.UploadOracleResult(payload))
-	if result.Passed {
+	if trialIncidentID != "" {
+		fmt.Printf("Trial recorded for incident %s (%s).\n", trialIncidentID, map[bool]string{true: "passed", false: "failed"}[result.Passed])
+	} else if result.Passed {
 		fmt.Println("Test passed; baseline captured.")
 	} else {
 		fmt.Printf("Test failed; failure captured (exit code %d).\n", result.ExitCode)

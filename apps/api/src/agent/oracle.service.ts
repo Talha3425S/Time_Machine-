@@ -7,10 +7,11 @@ import { Baseline } from '../entities/baseline.entity';
 import { Incident } from '../entities/incident.entity';
 import { Project } from '../entities/project.entity';
 import { TestRun } from '../entities/test-run.entity';
+import { EvidenceService } from '../evidence/evidence.service';
 
 export interface OraclePayload {
   command: string; passed: boolean; exitCode?: number; output?: string;
-  durationMs?: number; timedOut?: boolean; executedAt?: string; state?: Record<string, unknown>;
+  durationMs?: number; timedOut?: boolean; executedAt?: string; state?: Record<string, unknown>; incidentId?: string;
 }
 
 @Injectable()
@@ -21,23 +22,30 @@ export class OracleService {
     @InjectRepository(Baseline) private readonly baselines: Repository<Baseline>,
     @InjectRepository(TestRun) private readonly testRuns: Repository<TestRun>,
     @InjectRepository(Incident) private readonly incidents: Repository<Incident>,
+    private readonly evidence: EvidenceService,
   ) {}
 
   async record(projectId: string, payload: OraclePayload) {
     if (!payload.command?.trim()) throw new Error('A test command is required');
     const project = await this.projects.findOne({ where: { id: projectId } });
     if (!project) throw new NotFoundException('Project not found');
+    const linkedIncident = payload.incidentId ? await this.incidents.findOne({ where: { id: payload.incidentId, projectId } }) : null;
+    if (payload.incidentId && !linkedIncident) throw new NotFoundException('Incident not found for this project');
     const state = payload.state ? await this.states.save(this.states.create({
       projectId, gitState: payload.state.git ?? null, phpState: payload.state.php ?? null,
       composerState: payload.state.composer ?? null, dockerState: payload.state.docker ?? null,
       environmentState: payload.state.env ?? null, fullState: payload.state,
-      collectionTrigger: payload.passed ? 'baseline' : 'failure',
-      metadata: { source: 'oracle', executedAt: payload.executedAt },
+      collectionTrigger: linkedIncident ? 'manual' : payload.passed ? 'baseline' : 'failure',
+      metadata: { source: linkedIncident ? 'oracle_trial' : 'oracle', executedAt: payload.executedAt, incidentId: linkedIncident?.id },
     })) : null;
     const run = await this.testRuns.save(this.testRuns.create({
       projectId, command: payload.command, passed: payload.passed, exitCode: payload.exitCode ?? (payload.passed ? 0 : 1),
-      output: this.trimOutput(payload.output), durationMs: payload.durationMs ?? 0, timedOut: payload.timedOut ?? false, stateId: state?.id ?? null,
+      output: this.trimOutput(payload.output), durationMs: payload.durationMs ?? 0, timedOut: payload.timedOut ?? false, stateId: state?.id ?? null, incidentId: linkedIncident?.id ?? null,
     }));
+    if (linkedIncident) {
+      const report = await this.evidence.refreshForTrial(projectId, linkedIncident.id);
+      return { outcome: 'trial_recorded', incident: linkedIncident, run, trialSummary: report.trialSummary };
+    }
     if (payload.passed) {
       const baseline = await this.baselines.save(this.baselines.create({
         projectId, command: payload.command, stateId: state?.id ?? null,

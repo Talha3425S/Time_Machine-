@@ -114,8 +114,7 @@ export class ExperimentsService {
 
     const incident = experiment.hypothesis.incident;
     try {
-      await this.evidence.collect(execution.projectId, incident.id);
-      await this.evidence.generateReport(execution.projectId, incident.id);
+      await this.evidence.refreshForTrial(execution.projectId, incident.id);
     } catch {
       // The sandbox result remains durable even if a later report refresh fails.
     }

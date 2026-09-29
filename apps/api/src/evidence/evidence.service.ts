@@ -72,6 +72,16 @@ export class EvidenceService {
     return { evidence, trials };
   }
 
+  async refreshForTrial(projectId: string, incidentId: string) {
+    const trials = await this.getTrialSummary(projectId, incidentId);
+    if (trials.isFlaky) {
+      const confirmed = await this.hypotheses.find({ where: { incidentId, status: 'confirmed' } });
+      if (confirmed.length) await this.hypotheses.save(confirmed.map((hypothesis) => ({ ...hypothesis, status: 'testing' as const })));
+    }
+    await this.collect(projectId, incidentId);
+    return this.generateReport(projectId, incidentId);
+  }
+
   async getTrialSummary(projectId: string, incidentId: string): Promise<TrialSummary> {
     await this.requireIncident(projectId, incidentId);
     const runs = await this.testRuns.find({ where: { projectId, incidentId }, order: { createdAt: 'ASC' } });
