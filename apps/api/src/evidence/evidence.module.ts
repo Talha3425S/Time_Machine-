@@ -13,5 +13,6 @@ import { EvidenceService } from './evidence.service';
   imports: [TypeOrmModule.forFeature([Incident, TestRun, Hypothesis, Experiment, EvidenceRecord, ProofReport])],
   controllers: [EvidenceController],
   providers: [EvidenceService],
+  exports: [EvidenceService],
 })
 export class EvidenceModule {}

@@ -8,6 +8,7 @@ import type { CreateExperimentInput } from './experiments.service';
 export class ExperimentsController {
   constructor(private readonly experiments: ExperimentsService) {}
   @Post() create(@Param('projectId') projectId: string, @Body() input: CreateExperimentInput) { return this.experiments.create(projectId, input); }
+  @Get('planned') planned(@Param('projectId') projectId: string) { return this.experiments.listPlanned(projectId); }
   @Get() list(@Param('projectId') projectId: string) { return this.experiments.list(projectId); }
   @Get(':id') get(@Param('id') id: string) { return this.experiments.get(id); }
   @Post(':id/restore') restore(@Param('id') id: string) { return this.experiments.restore(id); }
