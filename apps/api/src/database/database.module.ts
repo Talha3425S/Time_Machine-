@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { join } from 'path';
 import { User } from '../entities/user.entity';
 import { Organization } from '../entities/organization.entity';
 import { Project } from '../entities/project.entity';
@@ -21,17 +22,32 @@ import { ProofReport } from '../entities/proof-report.entity';
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DATABASE_HOST', 'localhost'),
-        port: configService.get('DATABASE_PORT', 5432),
-        username: configService.get('DATABASE_USERNAME', 'postgres'),
-        password: configService.get('DATABASE_PASSWORD', 'postgres'),
-        database: configService.get('DATABASE_NAME', 'software_time_machine'),
-        entities: [User, Organization, Project, Incident, StateManifest, Hypothesis, Experiment, OrganizationMember, AgentState, Baseline, TestRun, StateGraph, StateGraphNode, StateGraphEdge, SandboxExecution, EvidenceRecord, ProofReport],
-        synchronize: configService.get('NODE_ENV') !== 'production',
-        logging: configService.get('NODE_ENV') === 'development',
-      }),
+      useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+        const shouldUseSsl = configService.get('DATABASE_SSL') === 'true';
+        const sharedOptions: TypeOrmModuleOptions = {
+          type: 'postgres',
+          entities: [User, Organization, Project, Incident, StateManifest, Hypothesis, Experiment, OrganizationMember, AgentState, Baseline, TestRun, StateGraph, StateGraphNode, StateGraphEdge, SandboxExecution, EvidenceRecord, ProofReport],
+          migrations: [join(__dirname, '..', 'migrations', '*.{js,ts}')],
+          migrationsRun: configService.get('RUN_MIGRATIONS') === 'true',
+          synchronize: configService.get('NODE_ENV') !== 'production',
+          logging: configService.get('NODE_ENV') === 'development',
+          ...(shouldUseSsl ? { ssl: { rejectUnauthorized: false } } : {}),
+        };
+
+        if (databaseUrl) {
+          return { ...sharedOptions, url: databaseUrl };
+        }
+
+        return {
+          ...sharedOptions,
+          host: configService.get<string>('DATABASE_HOST', 'localhost'),
+          port: Number(configService.get<string>('DATABASE_PORT', '5432')),
+          username: configService.get<string>('DATABASE_USERNAME', 'postgres'),
+          password: configService.get<string>('DATABASE_PASSWORD', 'postgres'),
+          database: configService.get<string>('DATABASE_NAME', 'software_time_machine'),
+        };
+      },
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([

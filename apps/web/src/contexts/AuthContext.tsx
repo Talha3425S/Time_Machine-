@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '../types';
-import api from '../lib/api';
+import api, { API_URL } from '../lib/api';
 
 interface AuthContextType {
   user: User | null;
@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/github`;
+    window.location.href = `${API_URL}/auth/github`;
   };
 
   const logout = () => {

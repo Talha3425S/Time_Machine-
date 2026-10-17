@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthResponse } from '../../../types';
+import { API_URL } from '../../../lib/api';
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -30,7 +31,7 @@ export default function AuthCallbackPage() {
         if (code) {
           try {
             const response = await fetch(
-              `${process.env.NEXT_PUBLIC_API_URL}/auth/github/callback?code=${code}`,
+              `${API_URL}/auth/github/callback?code=${code}`,
               {
                 credentials: 'include',
               }
@@ -64,5 +65,19 @@ export default function AuthCallbackPage() {
         <p className="mt-4 text-gray-600">Authenticating...</p>
       </div>
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" />
+        </div>
+      }
+    >
+      <AuthCallbackContent />
+    </Suspense>
   );
 }
