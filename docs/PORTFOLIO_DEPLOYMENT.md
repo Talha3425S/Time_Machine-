@@ -1,5 +1,15 @@
 # Portfolio deployment
 
+## No-card Vercel demo
+
+For a portfolio without a hosted API, deploy only `apps/web` to Vercel and set this production environment variable:
+
+```text
+NEXT_PUBLIC_DEMO_MODE=true
+```
+
+The root URL opens `/demo`, an interactive sample investigation that does not require a GitHub account, database, API, or payment card. Do not set `NEXT_PUBLIC_API_URL` for this mode.
+
 This repository is prepared for a two-service portfolio deployment:
 
 - **Vercel** hosts the Next.js app from `apps/web`.

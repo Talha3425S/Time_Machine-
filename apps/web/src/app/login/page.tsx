@@ -1,9 +1,24 @@
 'use client';
 
+import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const isPortfolioDemo = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+
+  if (isPortfolioDemo) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 px-6 text-white">
+        <div className="max-w-lg text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-300">Portfolio demo</p>
+          <h1 className="mt-4 text-4xl font-bold">Software Time Machine</h1>
+          <p className="mt-4 text-slate-300">Explore a simulated causal-debugging investigation. No account or repository access is required.</p>
+          <Link href="/demo" className="mt-8 inline-flex rounded-lg bg-indigo-500 px-5 py-3 font-semibold hover:bg-indigo-400">Open interactive demo</Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

@@ -10,10 +10,15 @@ export default function Home() {
 
   useEffect(() => {
     if (!loading) {
+      if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') {
+        router.replace('/demo');
+        return;
+      }
+
       if (isAuthenticated) {
-        router.push('/dashboard');
+        router.replace('/dashboard');
       } else {
-        router.push('/login');
+        router.replace('/login');
       }
     }
   }, [isAuthenticated, loading, router]);
