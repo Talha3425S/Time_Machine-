@@ -1,0 +1,137 @@
+
+> software-time-machine@0.1.0 dev:api
+> cd apps/api && npx @nestjs/cli start --watch
+
+[2J[3J[H[[90m11:11:40 AM[0m] Starting compilation in watch mode...
+
+[[90m11:11:55 AM[0m] Found 0 errors. Watching for file changes.
+
+[Nest] 22112  - 10/17/2026, 11:12:41 AM     LOG [NestFactory] Starting Nest application...
+[Nest] 22112  - 10/17/2026, 11:12:41 AM     LOG [InstanceLoader] DatabaseModule dependencies initialized +28ms
+[Nest] 22112  - 10/17/2026, 11:12:41 AM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +2ms
+[Nest] 22112  - 10/17/2026, 11:12:41 AM     LOG [InstanceLoader] PassportModule dependencies initialized +12ms
+[Nest] 22112  - 10/17/2026, 11:12:41 AM     LOG [InstanceLoader] ConfigHostModule dependencies initialized +2ms
+[Nest] 22112  - 10/17/2026, 11:12:41 AM     LOG [InstanceLoader] AppModule dependencies initialized +1ms
+[Nest] 22112  - 10/17/2026, 11:12:41 AM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms
+[Nest] 22112  - 10/17/2026, 11:12:41 AM     LOG [InstanceLoader] ConfigModule dependencies initialized +1ms
+Connecting to Redis at localhost:16379
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] RedisModule dependencies initialized +1338ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] JwtModule dependencies initialized +13ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] GithubModule dependencies initialized +1ms
+Redis connected successfully
+query: SELECT version()
+query: SELECT * FROM current_schema()
+query: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+query: START TRANSACTION
+query: SELECT * FROM current_schema()
+query: SELECT * FROM current_database()
+query: SELECT "table_schema", "table_name", obj_description(('"' || "table_schema" || '"."' || "table_name" || '"')::regclass, 'pg_class') AS table_comment FROM "information_schema"."tables" WHERE ("table_schema" = 'public' AND "table_name" = 'users') OR ("table_schema" = 'public' AND "table_name" = 'organizations') OR ("table_schema" = 'public' AND "table_name" = 'projects') OR ("table_schema" = 'public' AND "table_name" = 'incidents') OR ("table_schema" = 'public' AND "table_name" = 'state_manifests') OR ("table_schema" = 'public' AND "table_name" = 'hypotheses') OR ("table_schema" = 'public' AND "table_name" = 'experiments') OR ("table_schema" = 'public' AND "table_name" = 'organization_members') OR ("table_schema" = 'public' AND "table_name" = 'agent_states') OR ("table_schema" = 'public' AND "table_name" = 'baselines') OR ("table_schema" = 'public' AND "table_name" = 'test_runs') OR ("table_schema" = 'public' AND "table_name" = 'state_graphs') OR ("table_schema" = 'public' AND "table_name" = 'state_graph_nodes') OR ("table_schema" = 'public' AND "table_name" = 'state_graph_edges') OR ("table_schema" = 'public' AND "table_name" = 'sandbox_executions') OR ("table_schema" = 'public' AND "table_name" = 'evidence_records') OR ("table_schema" = 'public' AND "table_name" = 'proof_reports')
+query: SELECT TRUE FROM information_schema.columns WHERE table_name = 'pg_class' and column_name = 'relispartition'
+query: SELECT columns.*, pg_catalog.col_description(('"' || table_catalog || '"."' || table_schema || '"."' || table_name || '"')::regclass::oid, ordinal_position) AS description, ('"' || "udt_schema" || '"."' || "udt_name" || '"')::"regtype"::text AS "regtype", pg_catalog.format_type("col_attr"."atttypid", "col_attr"."atttypmod") AS "format_type" FROM "information_schema"."columns" LEFT JOIN "pg_catalog"."pg_attribute" AS "col_attr" ON "col_attr"."attname" = "columns"."column_name" AND "col_attr"."attrelid" = ( SELECT "cls"."oid" FROM "pg_catalog"."pg_class" AS "cls" LEFT JOIN "pg_catalog"."pg_namespace" AS "ns" ON "ns"."oid" = "cls"."relnamespace" WHERE "cls"."relname" = "columns"."table_name" AND "ns"."nspname" = "columns"."table_schema" ) WHERE ("table_schema" = 'public' AND "table_name" = 'organizations') OR ("table_schema" = 'public' AND "table_name" = 'projects') OR ("table_schema" = 'public' AND "table_name" = 'experiments') OR ("table_schema" = 'public' AND "table_name" = 'users') OR ("table_schema" = 'public' AND "table_name" = 'organization_members') OR ("table_schema" = 'public' AND "table_name" = 'incidents') OR ("table_schema" = 'public' AND "table_name" = 'hypotheses') OR ("table_schema" = 'public' AND "table_name" = 'agent_states') OR ("table_schema" = 'public' AND "table_name" = 'state_manifests') OR ("table_schema" = 'public' AND "table_name" = 'evidence_records') OR ("table_schema" = 'public' AND "table_name" = 'sandbox_executions') OR ("table_schema" = 'public' AND "table_name" = 'proof_reports') OR ("table_schema" = 'public' AND "table_name" = 'baselines') OR ("table_schema" = 'public' AND "table_name" = 'test_runs') OR ("table_schema" = 'public' AND "table_name" = 'state_graphs') OR ("table_schema" = 'public' AND "table_name" = 'state_graph_nodes') OR ("table_schema" = 'public' AND "table_name" = 'state_graph_edges')
+query: SELECT "ns"."nspname" AS "table_schema", "t"."relname" AS "table_name", "cnst"."conname" AS "constraint_name", pg_get_constraintdef("cnst"."oid") AS "expression", CASE "cnst"."contype" WHEN 'p' THEN 'PRIMARY' WHEN 'u' THEN 'UNIQUE' WHEN 'c' THEN 'CHECK' WHEN 'x' THEN 'EXCLUDE' END AS "constraint_type", "a"."attname" AS "column_name" FROM "pg_constraint" "cnst" INNER JOIN "pg_class" "t" ON "t"."oid" = "cnst"."conrelid" INNER JOIN "pg_namespace" "ns" ON "ns"."oid" = "cnst"."connamespace" LEFT JOIN "pg_attribute" "a" ON "a"."attrelid" = "cnst"."conrelid" AND "a"."attnum" = ANY ("cnst"."conkey") WHERE "t"."relkind" IN ('r', 'p') AND (("ns"."nspname" = 'public' AND "t"."relname" = 'organizations') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'projects') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'experiments') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'users') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'organization_members') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'incidents') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'hypotheses') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'agent_states') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'state_manifests') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'evidence_records') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'sandbox_executions') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'proof_reports') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'baselines') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'test_runs') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'state_graphs') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'state_graph_nodes') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'state_graph_edges'))
+query: SELECT "ns"."nspname" AS "table_schema", "t"."relname" AS "table_name", "i"."relname" AS "constraint_name", "a"."attname" AS "column_name", CASE "ix"."indisunique" WHEN 't' THEN 'TRUE' ELSE'FALSE' END AS "is_unique", pg_get_expr("ix"."indpred", "ix"."indrelid") AS "condition", "types"."typname" AS "type_name", "am"."amname" AS "index_type" FROM "pg_class" "t" INNER JOIN "pg_index" "ix" ON "ix"."indrelid" = "t"."oid" INNER JOIN "pg_attribute" "a" ON "a"."attrelid" = "t"."oid"  AND "a"."attnum" = ANY ("ix"."indkey") INNER JOIN "pg_namespace" "ns" ON "ns"."oid" = "t"."relnamespace" INNER JOIN "pg_class" "i" ON "i"."oid" = "ix"."indexrelid" INNER JOIN "pg_type" "types" ON "types"."oid" = "a"."atttypid" INNER JOIN "pg_am" "am" ON "i"."relam" = "am"."oid" LEFT JOIN "pg_constraint" "cnst" ON "cnst"."conname" = "i"."relname" WHERE "t"."relkind" IN ('r', 'p') AND "cnst"."contype" IS NULL AND (("ns"."nspname" = 'public' AND "t"."relname" = 'organizations') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'projects') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'experiments') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'users') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'organization_members') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'incidents') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'hypotheses') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'agent_states') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'state_manifests') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'evidence_records') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'sandbox_executions') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'proof_reports') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'baselines') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'test_runs') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'state_graphs') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'state_graph_nodes') OR ("ns"."nspname" = 'public' AND "t"."relname" = 'state_graph_edges'))
+query: SELECT "con"."conname" AS "constraint_name", "con"."nspname" AS "table_schema", "con"."relname" AS "table_name", "att2"."attname" AS "column_name", "ns"."nspname" AS "referenced_table_schema", "cl"."relname" AS "referenced_table_name", "att"."attname" AS "referenced_column_name", "con"."confdeltype" AS "on_delete", "con"."confupdtype" AS "on_update", "con"."condeferrable" AS "deferrable", "con"."condeferred" AS "deferred" FROM ( SELECT UNNEST ("con1"."conkey") AS "parent", UNNEST ("con1"."confkey") AS "child", "con1"."confrelid", "con1"."conrelid", "con1"."conname", "con1"."contype", "ns"."nspname", "cl"."relname", "con1"."condeferrable", CASE WHEN "con1"."condeferred" THEN 'INITIALLY DEFERRED' ELSE 'INITIALLY IMMEDIATE' END as condeferred, CASE "con1"."confdeltype" WHEN 'a' THEN 'NO ACTION' WHEN 'r' THEN 'RESTRICT' WHEN 'c' THEN 'CASCADE' WHEN 'n' THEN 'SET NULL' WHEN 'd' THEN 'SET DEFAULT' END as "confdeltype", CASE "con1"."confupdtype" WHEN 'a' THEN 'NO ACTION' WHEN 'r' THEN 'RESTRICT' WHEN 'c' THEN 'CASCADE' WHEN 'n' THEN 'SET NULL' WHEN 'd' THEN 'SET DEFAULT' END as "confupdtype" FROM "pg_class" "cl" INNER JOIN "pg_namespace" "ns" ON "cl"."relnamespace" = "ns"."oid" INNER JOIN "pg_constraint" "con1" ON "con1"."conrelid" = "cl"."oid" WHERE "con1"."contype" = 'f' AND (("ns"."nspname" = 'public' AND "cl"."relname" = 'organizations') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'projects') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'experiments') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'users') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'organization_members') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'incidents') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'hypotheses') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'agent_states') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'state_manifests') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'evidence_records') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'sandbox_executions') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'proof_reports') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'baselines') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'test_runs') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'state_graphs') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'state_graph_nodes') OR ("ns"."nspname" = 'public' AND "cl"."relname" = 'state_graph_edges')) ) "con" INNER JOIN "pg_attribute" "att" ON "att"."attrelid" = "con"."confrelid" AND "att"."attnum" = "con"."child" INNER JOIN "pg_class" "cl" ON "cl"."oid" = "con"."confrelid"  AND "cl"."relispartition" = 'f'INNER JOIN "pg_namespace" "ns" ON "cl"."relnamespace" = "ns"."oid" INNER JOIN "pg_attribute" "att2" ON "att2"."attrelid" = "con"."conrelid" AND "att2"."attnum" = "con"."parent"
+query: SELECT "udt_schema", "udt_name" FROM "information_schema"."columns" WHERE "table_schema" = 'public' AND "table_name" = 'experiments' AND "column_name"='status'
+query: SELECT "udt_schema", "udt_name" FROM "information_schema"."columns" WHERE "table_schema" = 'public' AND "table_name" = 'incidents' AND "column_name"='status'
+query: SELECT "udt_schema", "udt_name" FROM "information_schema"."columns" WHERE "table_schema" = 'public' AND "table_name" = 'hypotheses' AND "column_name"='status'
+query: SELECT "udt_schema", "udt_name" FROM "information_schema"."columns" WHERE "table_schema" = 'public' AND "table_name" = 'sandbox_executions' AND "column_name"='status'
+query: SELECT "udt_schema", "udt_name" FROM "information_schema"."columns" WHERE "table_schema" = 'public' AND "table_name" = 'state_graphs' AND "column_name"='relationshipType'
+query: SELECT "udt_schema", "udt_name" FROM "information_schema"."columns" WHERE "table_schema" = 'public' AND "table_name" = 'state_graphs' AND "column_name"='classification'
+query: SELECT "udt_schema", "udt_name" FROM "information_schema"."columns" WHERE "table_schema" = 'public' AND "table_name" = 'state_graph_nodes' AND "column_name"='stateType'
+query: SELECT "udt_schema", "udt_name" FROM "information_schema"."columns" WHERE "table_schema" = 'public' AND "table_name" = 'state_graph_edges' AND "column_name"='edgeType'
+query: SELECT "udt_schema", "udt_name" FROM "information_schema"."columns" WHERE "table_schema" = 'public' AND "table_name" = 'state_graph_edges' AND "column_name"='riskLevel'
+query: SELECT "e"."enumlabel" AS "value" FROM "pg_enum" "e" INNER JOIN "pg_type" "t" ON "t"."oid" = "e"."enumtypid" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'experiments_status_enum'
+query: SELECT "e"."enumlabel" AS "value" FROM "pg_enum" "e" INNER JOIN "pg_type" "t" ON "t"."oid" = "e"."enumtypid" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'incidents_status_enum'
+query: SELECT "e"."enumlabel" AS "value" FROM "pg_enum" "e" INNER JOIN "pg_type" "t" ON "t"."oid" = "e"."enumtypid" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'hypotheses_status_enum'
+query: SELECT "e"."enumlabel" AS "value" FROM "pg_enum" "e" INNER JOIN "pg_type" "t" ON "t"."oid" = "e"."enumtypid" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'sandbox_executions_status_enum'
+query: SELECT "e"."enumlabel" AS "value" FROM "pg_enum" "e" INNER JOIN "pg_type" "t" ON "t"."oid" = "e"."enumtypid" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'state_graphs_relationshiptype_enum'
+query: SELECT "e"."enumlabel" AS "value" FROM "pg_enum" "e" INNER JOIN "pg_type" "t" ON "t"."oid" = "e"."enumtypid" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'state_graphs_classification_enum'
+query: SELECT "e"."enumlabel" AS "value" FROM "pg_enum" "e" INNER JOIN "pg_type" "t" ON "t"."oid" = "e"."enumtypid" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'state_graph_nodes_statetype_enum'
+query: SELECT "e"."enumlabel" AS "value" FROM "pg_enum" "e" INNER JOIN "pg_type" "t" ON "t"."oid" = "e"."enumtypid" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'state_graph_edges_edgetype_enum'
+query: SELECT "e"."enumlabel" AS "value" FROM "pg_enum" "e" INNER JOIN "pg_type" "t" ON "t"."oid" = "e"."enumtypid" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'state_graph_edges_risklevel_enum'
+query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'typeorm_metadata'
+query: COMMIT
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] TypeOrmCoreModule dependencies initialized +431ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] TypeOrmModule dependencies initialized +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] OrganizationsModule dependencies initialized +4ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] EvidenceModule dependencies initialized +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] PlanningModule dependencies initialized +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] AuthModule dependencies initialized +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] ExperimentsModule dependencies initialized +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] SemanticModule dependencies initialized +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [InstanceLoader] AgentModule dependencies initialized +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] AppController {/}: +7ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/, GET} route +2ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] AuthController {/auth}: +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/auth/github, GET} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/auth/github/callback, GET} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/auth/profile, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] OrganizationsController {/organizations}: +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations, POST} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/:id, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/slug/:slug, GET} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/:id, PUT} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/:id, DELETE} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/:id/projects, POST} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/:id/projects, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/projects/:projectId, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/projects/:projectId, PUT} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/projects/:projectId, DELETE} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] MembersController {/organizations/:organizationId/members}: +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/:organizationId/members, POST} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/:organizationId/members, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/:organizationId/members/:memberId, PATCH} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/:organizationId/members/:memberId, DELETE} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/organizations/:organizationId/members/accept/:inviteToken, POST} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] GithubController {/github}: +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/github/validate, POST} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/github/webhook, POST} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/github/commits/:owner/:repo, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/github/branches/:owner/:repo, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/github/file, GET} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] AgentStateController {/api/projects/:projectId}: +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/state, POST} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/agent-config, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/heartbeat, POST} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/error, POST} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/oracle-results, POST} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents/:incidentId, PUT} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/states, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/states/latest, GET} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] StatesController {/api/states}: +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/states/:id, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/states/:id, DELETE} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] SemanticController {/api/projects/:projectId}: +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/manifests, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/manifests/:manifestId, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/manifests/:sourceManifestId/compare/:targetManifestId, POST} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/state-graph/rebuild, POST} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/state-graph, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] EvidenceController {/api/projects/:projectId/incidents/:incidentId}: +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents/:incidentId/evidence/collect, POST} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents/:incidentId/evidence, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents/:incidentId/evidence/history, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents/:incidentId/proof-reports, POST} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents/:incidentId/proof-reports, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] ExperimentsController {/api/projects/:projectId/experiments}: +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/experiments, POST} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/experiments/planned, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/experiments, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/experiments/:id, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/experiments/:id/restore, POST} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/experiments/:id, DELETE} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RoutesResolver] PlanningController {/api/projects/:projectId/incidents/:incidentId/hypotheses}: +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents/:incidentId/hypotheses/generate, POST} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents/:incidentId/hypotheses, GET} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents/:incidentId/hypotheses/plan, POST} route +1ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [RouterExplorer] Mapped {/api/projects/:projectId/incidents/:incidentId/hypotheses/:hypothesisId, PATCH} route +0ms
+[Nest] 22112  - 10/17/2026, 11:12:43 AM     LOG [NestApplication] Nest application successfully started +3ms

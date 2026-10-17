@@ -1,0 +1,21 @@
+
+> software-time-machine@0.1.0 dev:web
+> cd apps/web && npm run dev
+
+
+> software-time-machine-web@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 16s
+ ○ Compiling / ...
+ ✓ Compiled / in 11.3s (498 modules)
+ ✓ Compiled in 1035ms (243 modules)
+ GET / 200 in 83ms
+ GET / 200 in 72ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 1077ms (490 modules)
